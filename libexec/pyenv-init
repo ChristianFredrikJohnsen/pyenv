@@ -195,6 +195,11 @@ function print_path() {
         echo 'set -eg PATH[$pyenv_index]; end; set -e pyenv_index'
         print_path_prepend_shims
         ;;
+      zsh )
+        echo 'stale_path=($PYENV_ROOT/shims)'
+        echo 'path=(${path:|stale_path})'
+        print_path_prepend_shims
+        ;;
       * )
         # Some distros (notably Debian-based) set Bash's SSH_SOURCE_BASHRC compilation option
         # that makes it source `bashrc` under SSH even when not interactive.
@@ -218,6 +223,10 @@ function print_path_prepend_shims() {
     case "$shell" in
       fish )
           echo 'set -gx PATH '\'"${PYENV_ROOT}/shims"\'' $PATH'
+          ;;
+      zsh )
+          echo 'path=($PYENV_ROOT/shims $path)'
+          echo 'export PATH'
           ;;
       * )
           echo 'export PATH="'"${PYENV_ROOT}"'/shims:${PATH}"'
@@ -250,7 +259,6 @@ function print_rehash() {
 }
 
 function print_shell_function() {
-  commands=(`pyenv-commands --sh`)
   case "$shell" in
   fish )
     echo \
