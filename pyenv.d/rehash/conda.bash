@@ -25,8 +25,8 @@ if conda_exists; then
     done
     eval \
 "conda_shim() {
-  case \"\${1##*/}\" in 
-    ${shims[@]} 
+  case \"\${1##*/}\" in
+    ${shims[@]}
     *) return 1;;
   esac
 }"
